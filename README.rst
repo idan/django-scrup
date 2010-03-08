@@ -77,6 +77,18 @@ You'll also need to define a few values in your ``settings.py``:
 	``True`` and the returned URLs will be of the form ``http://<BUCKETNAME>/foo`` vs.
 	``http://<BUCKETNAME>.s3.amazonaws.com/foo``.
 
+Next, make sure to import ``django-scrup``'s urls. A line like the following in your
+``urls.py`` should do the trick::
+
+    (r'^scrup/', include('scrup.urls')),
+
+Finally, plug the URL into Scrup's configuration. Obviously, this depends on your
+server's domain and how you've chosen to setup ``django-scrup``'s urls. By default,
+``django-scrup`` accepts uploads at ``upload/<FILENAME>``, where ``<FILENAME>`` is
+optional. Here's an example of the default URL scheme for ``mydomain.com``::
+
+	http://mydomain.com/scrup/upload/{filename}
+
 License
 =======
 
