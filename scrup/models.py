@@ -6,6 +6,10 @@ class Date(models.Model):
     """A date during which a screenshot was uploaded"""
     date = models.DateField(default=datetime.date.today)
     
+    # Right now you're thinking, "Why the hell does this model even exist?!"
+    # That's ok. It does indeed look dumb, because it's just some groundwork
+    # for future features. Chillax and you'll see what it's for soon.
+    
     def __unicode__(self):
         return self.date.isoformat()
     
