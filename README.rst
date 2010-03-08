@@ -68,7 +68,7 @@ You'll also need to define a few values in your ``settings.py``:
 ``SCRUP_AWS_PREFIX``
 	**Optional.**
 	A relative pathname to a folder within the bucket. If this value is specified,
-	uploads will be copied to ``http://yourbucket.s3.amazonaws.com/*<SCRUP_AWS_PREFIX>*``
+	uploads will be copied to ``http://yourbucket.s3.amazonaws.com/<SCRUP_AWS_PREFIX>``
 
 ``SCRUP_AWS_CNAME``
 	**Optional.**
