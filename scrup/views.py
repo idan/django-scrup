@@ -1,4 +1,6 @@
 import datetime
+import Image
+import StringIO
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -14,6 +16,7 @@ secret = getattr(settings, 'SCRUP_AWS_SECRET_KEY', None)
 bucket = getattr(settings, 'SCRUP_AWS_BUCKET', None)
 prefix = getattr(settings, 'SCRUP_AWS_PREFIX', '')
 cname = getattr(settings, 'SCRUP_AWS_CNAME', False)
+thumb_size = getattr(settings, 'SCRUP_THUMB_SIZE', (300, 300))
 
 url_template = 'http://%s/%s' % (
     bucket if cname else bucket + ".s3.amazonaws.com",
@@ -26,7 +29,6 @@ else:
     raise ImproperlyConfigured('django-scrup AWS config requires key, secret, and bucket.')
 
 base62_converter = BaseConverter()
-
 
 def upload(request, filename=None):
     if request.method != 'POST':
@@ -48,8 +50,16 @@ def upload(request, filename=None):
     b = conn.create_bucket(bucket)
     k = Key(b)
     k.key = converted
-    # Hacky? Can't think of a better way to do this.
     k.set_contents_from_string(request.raw_post_data, headers=headers, policy='public-read')
+    
+    thumb_k = Key(b)
+    thumb_k.key = converted + '-'
+    thumb = Image.open(StringIO.StringIO(request.raw_post_data))
+    thumb.thumbnail(thumb_size)
+    thumb_png = StringIO.StringIO()
+    thumb.save(thumb_png, format='png')
+    thumb_k.set_contents_from_string(thumb_png.getvalue(), headers=headers, policy='public-read')
+    thumb_png.close()
     
     response = HttpResponse()
     response.status_code = 201

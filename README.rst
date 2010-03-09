@@ -11,13 +11,16 @@ Features
 
 * Receives POST'ed images from scrup and uploads them to S3, and returns a valid URL
   for the image.
+* Generates thumbnails and stores them at the same url, with the addition of a '-'
+  (minus sign) at the end of the unique identifier. For example, if your original
+  screenshot ends up at ``http://mydomain.com/Q1s``, then the thumbnail will be
+  ``http://mydomain.com/Q1s-``.
 
 There are a few things on the roadmap:
 
 * Giving some consideration to security matters -- right now it's either HTTPS or
   nothing.
 * Exception handling.
-* Thumbnail generation and storage on S3
 * A web-based timeline showing your history of screenshot uploads so you can easily
   find an old screenshot you've uploaded.
 
@@ -76,6 +79,10 @@ You'll also need to define a few values in your ``settings.py``:
 	returned screenshot URL. If you've created a CNAME for your bucket, set this to
 	``True`` and the returned URLs will be of the form ``http://<BUCKETNAME>/foo`` vs.
 	``http://<BUCKETNAME>.s3.amazonaws.com/foo``.
+
+``SCRUP_THUMB_SIZE``
+	**Optional.**. A two-tuple specifying the maximum dimensions of the generated
+	thumbnail. The default is ``(300, 300)``.
 
 Next, make sure to import ``django-scrup``'s urls. A line like the following in your
 ``urls.py`` should do the trick::
